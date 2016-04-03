@@ -69,6 +69,46 @@ http.createServer(function(request, response) {
       response.end();
       
     });
+  } else if(request.method === 'POST' && request.url === '/logout'){
+    
+    console.log('URI /logout');
+    var body = [];
+    request.on('error', function(err) {
+      console.error(err);
+    }).on('data', function(chunk) {
+      body.push(chunk);
+    }).on('end', function() {
+      body = Buffer.concat(body).toString();
+    
+
+      var data = JSON.parse(body);
+      
+      var token = data.token;
+
+      var payload = {};
+      for(var i = 0; i < validTokens.length-1; i++) {
+        if (validTokens[i] === token) {
+            
+            validTokens.splice(i,1);
+            break;
+        } else {
+          console.log("token not found");
+          payload = {"error":"user not logged in"};
+        }
+      }
+      response.statusCode = 200;
+      response.setHeader('Content-Type', 'application/json');
+
+
+      response.on('error', function(err) {
+        console.error(err);
+      });
+      
+      response.write(JSON.stringify(payload));
+      response.end();
+      
+    });
+
   } else {
     response.statusCode = 404;
     response.end();
