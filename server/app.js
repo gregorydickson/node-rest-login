@@ -95,7 +95,7 @@ http.createServer(function(request, response) {
 
             console.log("found token");
             validTokens.splice(i,1);
-            payload = {"logout":"success"}
+            payload = {"logout":"success"};
             break;
         } else {
           console.log("token not found");
